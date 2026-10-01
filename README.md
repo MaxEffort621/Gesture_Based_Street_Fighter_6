@@ -1,357 +1,139 @@
-# Gesture Gaming — Webcam-Based Hands-Free Control for Street Fighter 6
+# Gesture Gaming
 
-A webcam-based gesture controller for **Street Fighter 6** using Python, OpenCV, MediaPipe Pose, and pynput. The system detects body/hand-related pose landmarks from a webcam and converts configured gestures into keyboard inputs for hands-free gameplay.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.12-blue.svg" alt="Python 3.12">
+  <img src="https://img.shields.io/badge/OpenCV-4.11-green.svg" alt="OpenCV 4.11">
+  <img src="https://img.shields.io/badge/MediaPipe-0.10-orange.svg" alt="MediaPipe 0.10">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
+</p>
 
-## Overview
+Play Tekken through body gestures - a hands-free gaming experience using computer vision
 
-Gesture Gaming explores an alternative human-computer interaction method where a standard webcam is used as the input device. Instead of relying entirely on a conventional keyboard or controller, the system tracks selected body landmarks and maps their positions to keyboard commands.
+## 📖 Overview
 
-The project is implemented in Python and uses:
+Gesture-Gaming-Tekken is an innovative project that allows you to play Tekken (and potentially other fighting games) using only your body movements captured via webcam. The system provides two different control methods:
 
-- **OpenCV** for webcam capture and image processing
-- **MediaPipe Pose** for real-time pose landmark detection
-- **pynput** for keyboard input simulation
-- **Python virtual environment** for dependency isolation
+1. **Pose Detection System** - Uses MediaPipe's pose detection for full-body skeletal tracking
+2. **Motion Tracking System** - Uses OpenCV's CSRT tracker for facial movement tracking
 
-The system was configured and demonstrated for **Street Fighter 6** using a predefined keyboard mapping.
+![Gesture Gaming Demo](./assets/image1.png)
 
-## Features
+## ✨ Features
 
-- Real-time webcam-based pose detection
-- Gesture/landmark-based action triggering
-- Configurable keyboard mappings
-- Continuous left/right movement
-- Cooldown control for discrete actions
-- Compatible with standard webcam hardware
-- Modular Python project structure
-- Designed for hands-free fighting-game interaction
+- **No additional hardware required** - Just a standard webcam
+- **Two control systems** to choose from:
+  - **Pose-based control** (full-body skeletal tracking)
+  - **Face motion tracking** (tracks face movement for controls)
+- **Customizable trigger zones** that move with your face
+- **Configurable key mappings** to adapt to different games
+- **Intelligent cooldown system** to prevent action spamming
+- **Interactive setup process** for easy configuration
 
-## Technologies Used
+## 🚀 Getting Started
 
-| Technology | Purpose |
-|---|---|
-| Python 3.12.2 | Core programming language |
-| OpenCV | Webcam capture and image processing |
-| MediaPipe Pose 0.10.21 | Pose landmark detection |
-| pynput | Keyboard input simulation |
-| imutils | Image-processing utilities |
-| PyYAML | Configuration support |
+### Prerequisites
 
-## Project Structure
+- Python 3.12 or higher
+- Webcam
+- Tekken - https://3tekken.com/
 
-```text
-Gesture-Gaming/
-│
-├── core/
-│   ├── input.py
-│   └── settings.py
-│
-├── pose/
-│   ├── pose.py
-│   ├── setup.py
-│   └── utils.py
-│
-├── track/
-│   ├── tracking.py
-│   ├── motion_detector.py
-│   ├── setup.py
-│   └── utils.py
-│
-├── key_config.json
-├── requirements.txt
-└── README.md
-```
-
-The **pose** module is the primary implementation used for the Street Fighter 6 demonstration. The tracking module contains additional motion-tracking functionality but is not required for the SF6 demonstration.
-
-## Installation
-
-### 1. Clone the repository
+### Installation
 
 ```bash
-git clone <YOUR-GITHUB-REPOSITORY-URL>
-cd Gesture-Gaming
-```
+# Clone the repository
+git clone https://github.com/adityanandanx/STAT-IV-T003
+cd STAT-IV-T003
 
-### 2. Create a virtual environment
-
-```bash
+# Create and activate a virtual environment (recommended)
 python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -e .
 ```
 
-### 3. Activate the virtual environment
+## 🎮 Usage
 
-**Windows:**
+The project offers two different control methods:
 
-```bash
-.venv\Scripts\activate
-```
-
-**Linux/macOS:**
-
-```bash
-source .venv/bin/activate
-```
-
-### 4. Install dependencies
-
-The demonstrated configuration used:
-
-```bash
-pip install mediapipe==0.10.21
-pip install opencv-contrib-python==4.11.0.86
-pip install pynput
-pip install imutils
-pip install pyyaml
-```
-
-Alternatively, if a `requirements.txt` file is provided:
-
-```bash
-pip install -r requirements.txt
-```
-
-## Running the Project
-
-### Start the Pose Controller
+### Pose-Based Control System
 
 ```bash
 python -m pose.pose
 ```
 
-This starts webcam-based pose detection and the gesture-control pipeline.
+This system uses MediaPipe to track your full body posture:
 
-### Configure the Controller
+- **Movement**: Lean left/right with your shoulders to move your character
+- **Actions**: Move your hands or knees into the trigger zone to perform game actions
+
+### Motion Tracking System
 
 ```bash
-python -m pose.setup
+python -m track.tracking
 ```
 
-The setup module is used to configure trigger zones and associated actions.
+This system tracks your face position:
 
-Make sure the webcam is connected and accessible through the configured camera index.
+- **Movement**: Move your face left/right/up/down to control your character
+- **Actions**: Define motion regions that trigger specific actions when movement is detected
 
-## Street Fighter 6 Controls
+## ⚙️ Configuration
 
-The following keyboard configuration was used for the demonstration:
+Both control systems have interactive setup processes for first-time users:
 
-| Gesture / Action | Configured Key | SF6 Function |
-|---|---:|---|
-| Move Left | `A` | Left |
-| Move Right | `D` | Right |
-| Move Up | `W` | Up |
-| Move Down | `S` | Down |
-| Punch | `U` | Punch |
-| Kick | `J` | Kick |
-| Kick 2 | `K` | Kick 2 |
-| Block | `O` | Block |
-| Grab | `H` | Grab |
+- **Pose System Configuration**: Define trigger zones relative to your face position
+- **Motion Tracking Configuration**: Define face tracking region and gesture detection zones
 
-> **Note:** The `H`/Grab action remains an open item in the demonstrated implementation because a dedicated landmark check was not wired to this action.
-
-## How It Works
-
-### 1. Camera and Pose Detection
-
-The system captures frames from the webcam using OpenCV:
-
-```python
-cv2.VideoCapture(0)
-```
-
-Frames are converted from BGR to RGB before being passed to MediaPipe Pose.
-
-MediaPipe provides normalized body landmarks that are used by the controller to determine the user's position and trigger actions.
-
-### 2. Trigger-Zone Actions
-
-A rectangular trigger zone is defined relative to the detected face/nose position.
-
-Selected landmarks, including hand and knee landmarks, are checked against this zone. When a landmark enters the corresponding region, the associated action is triggered.
-
-### 3. Action-to-Key Mapping
-
-Actions are connected to keyboard keys through `key_config.json`.
-
-The controller loads the configured mapping and uses `pynput` to simulate key presses and releases.
-
-Example:
-
-```text
-Punch  -> U
-Kick   -> J
-Block  -> O
-```
-
-### 4. Continuous Movement
-
-Continuous movement is handled using the shoulder center and a reference position.
-
-The system compares the current shoulder-center position with the reference position and holds or releases the appropriate movement key depending on the detected displacement.
-
-### 5. Cooldown and False-Trigger Control
-
-A cooldown interval is used for discrete actions to prevent the same gesture from generating repeated keyboard events in rapid succession.
-
-This helps reduce accidental repeated inputs caused by continuous landmark detection.
-
-## Landmark Mapping Used
-
-The demonstrated configuration used the following landmark-to-action relationships:
-
-| Detected Landmark | Internal Action | Output |
-|---|---|---|
-| Right index / `left_hand` | Punch | `U` |
-| Left index / `right_hand` | Block | `O` |
-| Left knee | Kick 2 | `K` |
-| Right knee | Kick | `J` |
-
-The naming of some internal variables follows the original project structure and does not necessarily correspond directly to the user's physical left/right side.
-
-## Testing
-
-The implemented controller was tested using functional checks for:
-
-| Test | Result |
-|---|---|
-| Environment and dependency setup | Passed |
-| Pose controller execution | Passed |
-| Punch input | Passed |
-| Block input | Passed |
-| Continuous movement | Passed |
-| Keyboard output | Passed |
-| Grab input | Open item |
-
-These tests verify that the corresponding software components execute and produce the expected configured keyboard events.
-
-## Empirical Evaluation
-
-A separate companion gesture-controller experiment was conducted using **500 trials** across 10 gesture classes.
-
-| Metric | Result |
-|---|---:|
-| Total trials | 500 |
-| Successful detections | 484 |
-| Unsuccessful detections | 16 |
-| Aggregate accuracy | 96.8% |
-| Mean response time | 49 ms |
-
-**Important:** These measurements belong to the companion FPS/RPG gesture-controller experiment and should **not be interpreted as measured Street Fighter 6 accuracy**. The SF6 implementation was evaluated through functional tests and demonstration rather than the same 500-trial quantitative protocol.
-
-## Hardware Requirements
-
-The project is designed to work with a standard webcam-based setup.
-
-Recommended hardware:
-
-- Laptop or desktop computer
-- Built-in or USB webcam
-- Keyboard
-- Sufficient lighting for pose detection
-- Street Fighter 6 installation for gameplay testing
-
-A dedicated depth camera or external motion-tracking device is not required for the demonstrated implementation.
-
-## Configuration
-
-Keyboard mappings are stored in:
-
-```text
-key_config.json
-```
-
-The mapping can be modified to match the keyboard configuration used by the game.
-
-For example:
+You can also customize key mappings in `key_config.json`:
 
 ```json
 {
-    "left": "a",
-    "right": "d",
-    "up": "w",
-    "down": "s",
-    "punch": "u",
-    "kick": "j",
-    "kick2": "k",
-    "block": "o",
-    "grab": "h"
+  "up": "__special_key__up",
+  "down": "__special_key__down",
+  "left": "__special_key__left",
+  "right": "__special_key__right",
+  "punch": "a",
+  "kick": "x",
+  "kick2": "z",
+  "block": "s",
+  "grab": "d"
 }
 ```
 
-Use the exact key names expected by the project's input-handling implementation.
+## 🧠 Technical Architecture
 
-## Limitations
+The project follows a modular architecture with clear separation of concerns:
 
-- Trigger zones are based on landmark positions rather than semantic hand-sign recognition.
-- Detection can be affected by lighting conditions, camera placement, and body/landmark occlusion.
-- Cooldown values can affect responsiveness and false-trigger behavior.
-- The game must have the correct keyboard focus for simulated inputs to be received.
-- The current implementation does not provide a dedicated landmark condition for the Grab action.
-- The demonstrated SF6 evaluation is primarily functional rather than a large-scale quantitative accuracy study.
-- The project uses MediaPipe Pose rather than a dedicated hand-landmark model.
+- **Core Module**: Contains shared functionality:
+  - `input.py`: Handles keyboard input simulation
+  - `settings.py`: Manages configuration loading/saving
+- **Pose Module**: Implements the pose-based control system:
+  - `pose.py`: Main pose detection and control logic
+  - `setup.py`: Interactive configuration for pose system
+  - `utils.py`: Helper functions for pose detection
+- **Track Module**: Implements the motion tracking system:
+  - `tracking.py`: Main face tracking control loop
+  - `motion_detector.py`: Motion detection and action triggering
+  - `setup.py`: Interactive configuration for tracking system
+  - `utils.py`: Helper functions for tracking
 
-## Future Work
+## 📊 Performance Considerations
 
-Possible improvements include:
+Both systems are optimized for responsive gameplay:
 
-- MediaPipe Hands with 21 hand landmarks
-- Gesture normalization
-- SVM, Random Forest, or lightweight neural-network classification
-- Temporal smoothing
-- Confidence thresholds
-- Per-action cooldown values
-- Dedicated Grab gesture detection
-- Repeated-trial quantitative evaluation for SF6
-- Gesture-sequence and combo recognition
-- More robust handling of occlusion and lighting variations
+- **Frame rate optimization** to reduce input lag
+- **Movement thresholds** to filter out unintentional movements
+- **Cooldown timers** to prevent action spamming
+- **Reference position tracking** to adapt to user movement over time
 
-## Demonstration
+## 📝 License
 
-Add the project demonstration video here:
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-```text
-[Demo Video Link]
-```
+## 🙏 Acknowledgements
 
-If the video is hosted on Google Drive, GitHub, YouTube, or another platform, replace the placeholder with the corresponding link.
-
-## Team
-
-**Team Agamotto**
-
-- Hariom Patidar — 23BCE1268
-- Gaurav Singh — 23BCE1299
-- Abhishek Jadli — 23BCE5133
-
-## GitHub Topics
-
-Recommended repository topics:
-
-```text
-computer-vision
-gesture-recognition
-mediapipe
-opencv
-python
-human-computer-interaction
-gesture-control
-gaming
-street-fighter-6
-pose-estimation
-```
-
-## References
-
-The project is based on computer-vision, pose-estimation, and gesture-interaction techniques using OpenCV, MediaPipe, and related research literature.
-
-## License
-
-Add the project's license here if applicable.
-
-Example:
-
-```text
-MIT License
-```
-
-If no license has been selected, remove this section until one is added.
+- [OpenCV](https://opencv.org/) for computer vision capabilities
+- [MediaPipe](https://mediapipe.dev/) for pose detection
+- [PyInput](https://github.com/moses-palmer/pynput) for input simulation
+- [Imutils](https://github.com/PyImageSearch/imutils) for image processing utilities

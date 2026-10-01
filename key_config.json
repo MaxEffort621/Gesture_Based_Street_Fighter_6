@@ -1,0 +1,13 @@
+{
+    "up": "w",
+    "down": "s",
+    "left": "a",
+    "right": "d",
+    "punch": "u",
+    "kick": "j",
+    "kick2": "k",
+    "block": "o",
+    "grab": "h",
+    "special1" : "i",
+    "special2": "l"
+}
